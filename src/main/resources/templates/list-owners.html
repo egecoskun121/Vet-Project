@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>List Owners</title>
+    <link rel="stylesheet"
+          href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css"
+          integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
+          crossorigin="anonymous">
+</head>
+<body>
+<div class="container">
+    <h2>List Owners</h2>
+    <hr/>
+    <table class="table table-bordered table-stripe">
+
+        <thead>
+
+        <tr>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Age</th>
+        </tr>
+
+        </thead>
+
+        <tbody>
+        <tr th:each="owner: ${owners}">
+            <td> th:text="${owner.firstName}</td>
+            <td> th:text="${owner.lastName}</td>
+            <td> th:text="${owner.phoneNumber}</td>
+        </tr>
+
+        </tbody>
+
+    </table>
+</div>
+</body>
+</html>
