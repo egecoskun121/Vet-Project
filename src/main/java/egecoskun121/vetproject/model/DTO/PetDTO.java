@@ -13,7 +13,7 @@ public class PetDTO {
     private String genus;
     private Type type;
     private String name;
-    private short age;
+    private int age;
     private String description;
 
 }

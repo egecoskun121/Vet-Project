@@ -11,6 +11,7 @@ public class PetMapper {
 
     public static PetDTO toDTO(Pet pet){
         PetDTO petDTO = new PetDTO();
+        petDTO.setType(pet.getType());
         petDTO.setAge(pet.getAge());
         petDTO.setDescription(pet.getDescription());
         petDTO.setGenus(pet.getGenus());
@@ -26,6 +27,7 @@ public class PetMapper {
         pet.setDescription(petDTO.getDescription());
         pet.setGenus(petDTO.getGenus());
         pet.setName(petDTO.getName());
+        pet.setType(petDTO.getType());
 
         return pet;
     }

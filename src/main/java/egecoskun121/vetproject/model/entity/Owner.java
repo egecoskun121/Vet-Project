@@ -1,6 +1,8 @@
 package egecoskun121.vetproject.model.entity;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 
 import javax.persistence.*;
@@ -11,9 +13,10 @@ import java.util.Set;
 import static javax.persistence.FetchType.LAZY;
 
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity
 @Table(name = "owner")
-@RequiredArgsConstructor
 public class Owner {
 
     @Id
