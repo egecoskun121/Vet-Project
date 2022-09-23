@@ -1,7 +1,9 @@
 package egecoskun121.vetproject.controller;
 
 
+import egecoskun121.vetproject.model.DTO.OwnerDTO;
 import egecoskun121.vetproject.model.DTO.PetDTO;
+import egecoskun121.vetproject.model.entity.Owner;
 import egecoskun121.vetproject.model.entity.Pet;
 import egecoskun121.vetproject.model.mapper.PetMapper;
 import egecoskun121.vetproject.repository.PetRepository;
@@ -10,6 +12,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Repository;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
 
 import java.util.List;
 
@@ -18,11 +21,11 @@ import java.util.List;
 public class PetController {
 
     private PetService petService;
-    private PetRepository petRepository;
 
-    public PetController(PetService petService, PetRepository petRepository) {
+
+    public PetController(PetService petService) {
         this.petService = petService;
-        this.petRepository = petRepository;
+
     }
 
     @GetMapping("/all")
@@ -59,5 +62,55 @@ public class PetController {
     public ResponseEntity delete(@PathVariable("id")Long id){
         petService.delete(id);
         return ResponseEntity.ok("Related pet deleted succesfully.");
+    }
+
+    //-***************************************************************************-//
+
+    @GetMapping("/showList")
+    public ModelAndView showPetList(){
+        ModelAndView mav = new ModelAndView("list-pets");
+        mav.addObject("pets", petService.getAllPets());
+        return mav;
+    }
+
+    @GetMapping("/showPetUpdateForm")
+    public ModelAndView showPetUpdateForm(@RequestParam Long id){
+        ModelAndView mav = new ModelAndView("update-pet-form");
+        Pet pet = petService.getById(id);
+        mav.addObject("pet",pet);
+        return mav;
+    }
+
+
+    @GetMapping("/addPetForm")
+    public ModelAndView createNewPetForm(){
+        ModelAndView mav = new ModelAndView("create-pet-form");
+        Pet pet = new Pet();
+        mav.addObject("pet",pet);
+        return mav;
+    }
+
+    @PostMapping("/savePet")
+    public ModelAndView savePet(@ModelAttribute PetDTO petDTO){
+        petService.create(petDTO);
+        ModelAndView mav = new ModelAndView("list-pets");
+        mav.addObject("pets", petService.getAllPets());
+        return mav;
+    }
+
+    @RequestMapping(path = "/updatePetForm/{id}")
+    public ModelAndView updatePetForm(@PathVariable("id") Long id,@ModelAttribute PetDTO petDTO){
+        petService.updatePet(id,petDTO);
+        ModelAndView mav = new ModelAndView("list-pets");
+        mav.addObject("pets", petService.getAllPets());
+        return mav;
+    }
+
+    @RequestMapping(path = "/deletePetForm")
+    public ModelAndView deletePetForm(@RequestParam Long id){
+        petService.delete(id);
+        ModelAndView mav = new ModelAndView("list-pets");
+        mav.addObject("pets", petService.getAllPets());
+        return mav;
     }
 }

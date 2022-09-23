@@ -31,6 +31,7 @@ public class OwnerController {
         return ResponseEntity.ok(allOwners);
     }
 
+
     @GetMapping("/{id}")
     public ResponseEntity getOwnerById(@PathVariable("id") Long id){
         Owner owner = ownerService.getById(id);
@@ -43,13 +44,7 @@ public class OwnerController {
         return ResponseEntity.status(HttpStatus.CREATED).body(owner);
     }
 
-    @GetMapping("/showList")
-    public ModelAndView showCustomer(){
-        ModelAndView mav = new ModelAndView("list-owners");
-        List<Owner> allOwners = ownerService.getAllOwners();
-        mav.addObject("owners", allOwners);
-        return mav;
-    }
+
 
     @PutMapping("/update/{id}")
     public ResponseEntity update(@RequestBody OwnerDTO ownerDTO,@PathVariable("id")Long id){
@@ -63,5 +58,56 @@ public class OwnerController {
 
         return ResponseEntity.ok("Related owner deleted succesfully");
     }
+
+    //-******************************************************************************************************-//
+
+    @GetMapping("/showList")
+    public ModelAndView showOwnerList(){
+        ModelAndView mav = new ModelAndView("list-owners");
+        mav.addObject("owners", ownerService.getAllOwners());
+        return mav;
+    }
+
+    @GetMapping("/showUpdateForm")
+    public ModelAndView showUpdateForm(@RequestParam Long id){
+        ModelAndView mav = new ModelAndView("update-owner-form");
+        Owner owner = ownerService.getById(id);
+        mav.addObject("owner",owner);
+        return mav;
+    }
+
+    @GetMapping("/addOwnerForm")
+    public ModelAndView createNewCustomerForm(){
+        ModelAndView mav = new ModelAndView("create-owner-form");
+        Owner owner = new Owner();
+        mav.addObject("owner", owner);
+        return mav;
+    }
+
+    @PostMapping("/saveOwner")
+    public ModelAndView saveOwner(@ModelAttribute OwnerDTO owner){
+        ownerService.create(owner);
+        ModelAndView mav = new ModelAndView("list-owners");
+        mav.addObject("owners", ownerService.getAllOwners());
+        return mav;
+    }
+
+    @RequestMapping(path = "/updateOwnerForm/{id}")
+    public ModelAndView updateOwnerForm(@PathVariable("id") Long id,@ModelAttribute OwnerDTO ownerDTO){
+        ownerService.updateOwner(id,ownerDTO);
+        ModelAndView mav = new ModelAndView("list-owners");
+        mav.addObject("owners", ownerService.getAllOwners());
+        return mav;
+    }
+
+    @RequestMapping(path = "/deleteOwnerForm")
+    public ModelAndView deleteOwnerForm(@RequestParam Long id){
+        ownerService.delete(id);
+        ModelAndView mav = new ModelAndView("list-owners");
+        mav.addObject("owners", ownerService.getAllOwners());
+        return mav;
+    }
+
+
 
 }

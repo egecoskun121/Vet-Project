@@ -38,20 +38,16 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/users/signin").permitAll()
                 .antMatchers("/users/signup").permitAll()
                 .antMatchers("/api/v1/owners/showList").permitAll()
+                .antMatchers("/api/v1/owners/**").permitAll()
+                .antMatchers("/api/v1/pet/**").permitAll()
                 .anyRequest().authenticated();
 
         // Apply JWT
         http.apply(new JwtTokenFilterConfigurer(jwtTokenProvider));
-
-
-
     }
 
     @Override
     public void configure(WebSecurity web) throws Exception {
-
-
-
         web.ignoring().antMatchers("/v2/api-docs",
 //                swagger2 base urls
                 "/configuration/ui",
