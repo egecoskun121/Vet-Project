@@ -13,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Repository;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.view.RedirectView;
 
 import java.util.List;
 
@@ -99,18 +100,18 @@ public class PetController {
     }
 
     @RequestMapping(path = "/updatePetForm/{id}")
-    public ModelAndView updatePetForm(@PathVariable("id") Long id,@ModelAttribute PetDTO petDTO){
+    public RedirectView updatePetForm(@PathVariable("id") Long id,@ModelAttribute PetDTO petDTO){
         petService.updatePet(id,petDTO);
-        ModelAndView mav = new ModelAndView("list-pets");
-        mav.addObject("pets", petService.getAllPets());
-        return mav;
+        RedirectView redirectView = new RedirectView();
+        redirectView.setUrl("http://localhost:8093/api/v1/owners/showList");
+        return redirectView;
     }
 
     @RequestMapping(path = "/deletePetForm")
-    public ModelAndView deletePetForm(@RequestParam Long id){
+    public RedirectView deletePetForm(@RequestParam Long id){
         petService.delete(id);
-        ModelAndView mav = new ModelAndView("list-pets");
-        mav.addObject("pets", petService.getAllPets());
-        return mav;
+        RedirectView redirectView = new RedirectView();
+        redirectView.setUrl("http://localhost:8093/api/v1/owners/showList");
+        return redirectView;
     }
 }

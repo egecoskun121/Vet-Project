@@ -10,6 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.view.RedirectView;
 
 import java.util.List;
 
@@ -93,19 +94,21 @@ public class OwnerController {
     }
 
     @RequestMapping(path = "/updateOwnerForm/{id}")
-    public ModelAndView updateOwnerForm(@PathVariable("id") Long id,@ModelAttribute OwnerDTO ownerDTO){
+    public RedirectView  updateOwnerForm(@PathVariable("id") Long id,@ModelAttribute OwnerDTO ownerDTO){
         ownerService.updateOwner(id,ownerDTO);
-        ModelAndView mav = new ModelAndView("list-owners");
-        mav.addObject("owners", ownerService.getAllOwners());
-        return mav;
+        RedirectView redirectView = new RedirectView();
+        redirectView.setUrl("http://localhost:8093/api/v1/owners/showList");
+       // ModelAndView mav = new ModelAndView("list-owners");
+        //mav.addObject("owners", ownerService.getAllOwners());
+        return redirectView;
     }
 
     @RequestMapping(path = "/deleteOwnerForm")
-    public ModelAndView deleteOwnerForm(@RequestParam Long id){
+    public RedirectView deleteOwnerForm(@RequestParam Long id){
         ownerService.delete(id);
-        ModelAndView mav = new ModelAndView("list-owners");
-        mav.addObject("owners", ownerService.getAllOwners());
-        return mav;
+        RedirectView redirectView = new RedirectView();
+        redirectView.setUrl("http://localhost:8093/api/v1/owners/showList");
+        return redirectView;
     }
 
 
