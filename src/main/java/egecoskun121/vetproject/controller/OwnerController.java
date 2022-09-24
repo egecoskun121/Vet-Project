@@ -86,11 +86,11 @@ public class OwnerController {
     }
 
     @PostMapping("/saveOwner")
-    public ModelAndView saveOwner(@ModelAttribute OwnerDTO owner){
+    public RedirectView saveOwner(@ModelAttribute OwnerDTO owner){
         ownerService.create(owner);
-        ModelAndView mav = new ModelAndView("list-owners");
-        mav.addObject("owners", ownerService.getAllOwners());
-        return mav;
+        RedirectView redirectView = new RedirectView();
+        redirectView.setUrl("http://localhost:8093/api/v1/owners/showList");
+        return redirectView;
     }
 
     @RequestMapping(path = "/updateOwnerForm/{id}")

@@ -21,11 +21,15 @@ import java.util.Optional;
 public class PetService {
 
     private final PetRepository petRepository;
+    private final OwnerService ownerService;
 
     @Autowired
-    public PetService(PetRepository petRepository) {
+    public PetService(PetRepository petRepository, OwnerService ownerService) {
         this.petRepository = petRepository;
+        this.ownerService = ownerService;
     }
+
+
 
     public List<Pet> getAllPets(){
         List<Pet> allPets = petRepository.findAll();
@@ -45,7 +49,6 @@ public class PetService {
         if(byId.isEmpty()){
             return null;
         }
-
         Pet updatedPet = byId.get();
 
         if(!StringUtils.isEmpty(petDTO.getAge())){
@@ -58,7 +61,6 @@ public class PetService {
             updatedPet.setName(petDTO.getName());
         }
 
-
         return petRepository.save(updatedPet);
     }
 
@@ -69,8 +71,11 @@ public class PetService {
         });
     }
 
-    public Pet create(PetDTO petDTO){
+    public Pet create(Long id,PetDTO petDTO){
         Pet pet = PetMapper.toEntity(petDTO);
+        Owner owner=ownerService.getById(id);
+        owner.getPet().add(pet);
+        pet.setOwner(owner);
         return petRepository.save(pet);
     }
 

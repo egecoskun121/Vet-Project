@@ -104,7 +104,7 @@ public class PetServiceTest {
         petDTO.setGenus(expected.getGenus());
         petDTO.setAge(expected.getAge());
 
-        Pet pet1 = petService.create(petDTO);
+        Pet pet1 = petService.create(anyLong(),petDTO);
 
         verify(petRepository,times(1)).save(expected);
 

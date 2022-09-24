@@ -12,7 +12,7 @@
 <div class="container">
     <h2>Add Pet</h2>
     <hr/>
-    <form th:action="@{/api/v1/pet/savePet}" th:object="${pet}" method="POST">
+    <form th:action="@{/api/v1/pet/savePet(id=${owner.id})}" th:object="${pet}" method="POST">
 
         <input type="text" th:field="*{name}" placeholder="Enter name" class="form-control col-4 mb-4" />
 

@@ -7,7 +7,9 @@ import egecoskun121.vetproject.model.entity.Owner;
 import egecoskun121.vetproject.model.entity.Pet;
 import egecoskun121.vetproject.model.mapper.PetMapper;
 import egecoskun121.vetproject.repository.PetRepository;
+import egecoskun121.vetproject.service.OwnerService;
 import egecoskun121.vetproject.service.PetService;
+import org.h2.engine.Mode;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Repository;
@@ -22,11 +24,12 @@ import java.util.List;
 public class PetController {
 
     private PetService petService;
+    private OwnerService ownerService;
 
 
-    public PetController(PetService petService) {
+    public PetController(PetService petService, OwnerService ownerService) {
         this.petService = petService;
-
+        this.ownerService = ownerService;
     }
 
     @GetMapping("/all")
@@ -53,8 +56,8 @@ public class PetController {
     }
 
     @PostMapping("/create")
-    public ResponseEntity create(@RequestBody PetDTO petDTO){
-        Pet pet = petService.create(petDTO);
+    public ResponseEntity create(@RequestParam Long id,@RequestBody PetDTO petDTO){
+        Pet pet = petService.create(id,petDTO);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(pet);
     }
@@ -83,20 +86,24 @@ public class PetController {
     }
 
 
-    @GetMapping("/addPetForm")
-    public ModelAndView createNewPetForm(){
+    @RequestMapping(path="/addPetForm")
+    public ModelAndView createNewPetForm(@RequestParam Long id){
         ModelAndView mav = new ModelAndView("create-pet-form");
+
         Pet pet = new Pet();
+        Owner owner=ownerService.getById(id);
+
+        mav.addObject("owner",owner);
         mav.addObject("pet",pet);
         return mav;
     }
 
-    @PostMapping("/savePet")
-    public ModelAndView savePet(@ModelAttribute PetDTO petDTO){
-        petService.create(petDTO);
-        ModelAndView mav = new ModelAndView("list-pets");
-        mav.addObject("pets", petService.getAllPets());
-        return mav;
+    @RequestMapping(path="/savePet")
+    public RedirectView savePet(@RequestParam Long id,@ModelAttribute PetDTO petDTO){
+        petService.create(id,petDTO);
+        RedirectView redirectView = new RedirectView();
+        redirectView.setUrl("http://localhost:8093/api/v1/owners/showList");
+        return redirectView;
     }
 
     @RequestMapping(path = "/updatePetForm/{id}")
@@ -114,4 +121,15 @@ public class PetController {
         redirectView.setUrl("http://localhost:8093/api/v1/owners/showList");
         return redirectView;
     }
+
+    @RequestMapping(path = "/showOwnerPetsForm")
+    public ModelAndView showPetsOfOwner(@RequestParam Long id){
+        Owner owner = ownerService.getById(id);
+        List<Pet> petList = owner.getPet();
+        ModelAndView mav = new ModelAndView("show-pets");
+        mav.addObject("pets",petList);
+        return mav;
+    }
+
+
 }
